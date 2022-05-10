@@ -7,6 +7,9 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="4fc0439e-5fcd-4d47-88d1-4718b8edd69f" responseTimeout="90000000" >
 		<http:request-connection host="localhost" port="8081" />
 	</http:request-config>
+	<http:listener-config name="HTTP_Listener_config_Ex" doc:name="HTTP Listener config" doc:id="cb905b93-fc40-4c1a-ba42-419955478c45" >
+		<http:listener-connection host="0.0.0.0" port="8085" />
+	</http:listener-config>
 	<flow name="basics" doc:id="e8617798-0476-48a0-bebf-372e7db570a2" >
 		<http:listener doc:name="HTTP GET" doc:id="e55fb7cd-9580-4e79-b947-b6747bbd5f87" config-ref="HTTP_Listener_config" path="/basics/*" allowedMethods="GET">
 			<http:response >
@@ -36,5 +39,10 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 		<http:listener doc:name="GET QUERYPARAMS" doc:id="b091c24a-045d-4229-8d6c-892e1252a707" config-ref="HTTP_Listener_config" path="/queryParams" allowedMethods="GET"/>
 		<logger level="INFO" doc:name="log START" doc:id="9be6c188-c84d-4f63-adc7-ff2e9aa03de3" message='#["log START - " ++ flow.name]'/>
 		<set-payload value='#[%dw 2.0&#10;&#10;output application/json&#10;---&#10;&#10;attributes.queryParams]' doc:name="Set Payload - Query Params" doc:id="956c0eae-d3b3-4a14-8da2-bb0ea84702d2" />
+	</flow>
+	<flow name="Exercise" doc:id="dacaf153-eba0-4c95-9593-f841205df985" >
+		<http:listener doc:name="Listener" doc:id="6b166441-1e97-4dd3-b75a-9e5b90a964c8" config-ref="HTTP_Listener_config_Exercise" path="/exercise/{id}" allowedMethods="GET"/>
+		<logger level="INFO" doc:name="log START" doc:id="7018eac6-bab2-4682-904c-29c1b388e53f" message='#["log START " ++ flow.name]'/>
+		<set-payload value='#[%dw 2.0&#10;&#10;output application/json&#10;---&#10;&#10;{&#10;	"uriParams": {"id": attributes.uriParams.id},&#10;	"queryParams": attributes.queryParams&#10;}]' doc:name="Qry and Uri Params" doc:id="239e717a-f64c-4f6b-89f1-04d08ca5ca2a" />
 	</flow>
 </mule>
